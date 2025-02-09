@@ -77,7 +77,7 @@ export function FilterDropdown({
                     />
                     <Label
                       htmlFor={`checkbox-${type}-${option.id}`}
-                      className="flex-grow cursor-pointer"
+                      className="grow cursor-pointer"
                     >
                       {option.name}
                     </Label>

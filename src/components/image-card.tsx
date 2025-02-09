@@ -60,7 +60,7 @@ export function ImageCard({ image, priority }: ImageCardProps) {
             {isNsfw ? "NSFW" : "SFW"}
           </Badge>
 
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-neutral-950/50 to-transparent p-4">
+          <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-neutral-950/50 to-transparent p-4">
             <div className="flex flex-wrap gap-1">
               {image.tags.slice(0, MAX_TAGS).map((tag, idx) => (
                 <Badge key={idx} variant="secondary">
