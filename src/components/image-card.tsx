@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 
 import { ImageCardSkeleton } from "@/components/image-card-skeleton";
+import { ImageError } from "@/components/image-error";
 import { Badge } from "@/components/ui/badge";
 
 import { NSFW_RATINGS, type NSFWRating } from "@/constants";
@@ -28,7 +29,7 @@ export function ImageCard({ image, priority }: ImageCardProps) {
 
   const isNsfw = NSFW_RATINGS.includes(image.rating as NSFWRating);
 
-  if (hasError) return null;
+  if (hasError) return <ImageError />;
 
   return (
     <div className="group relative cursor-pointer overflow-hidden rounded-lg shadow-md select-none">
