@@ -16,7 +16,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { RatingsCheckboxItem } from "@/components/ratings-checkbox-item";
+import { RatingsCheckboxItem } from "@/app/(home)/components/ratings-checkbox-item";
 import { sortedAgeRatings } from "@/constants";
 import { useImages } from "@/hooks/use-images";
 import { useRatingsSelection } from "@/hooks/use-ratings-selection";

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
-import { ImageGallery } from "@/components/image-gallery";
-import { RatingsContainer } from "@/components/ratings-container";
+import { ImageGallery } from "@/app/(home)/components/image-gallery";
+import { RatingsContainer } from "@/app/(home)/components/ratings-container";
 
 export const metadata: Metadata = {
   title: "Explore Anime Artwork",

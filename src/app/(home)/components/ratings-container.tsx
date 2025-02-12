@@ -2,7 +2,7 @@
 
 import { Settings } from "lucide-react";
 
-import { RatingsDropdown } from "@/components/ratings-dropdown";
+import { RatingsDropdown } from "@/app/(home)/components/ratings-dropdown";
 import { Button } from "@/components/ui/button";
 
 export function RatingsContainer() {

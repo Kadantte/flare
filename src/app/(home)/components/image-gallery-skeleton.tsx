@@ -1,4 +1,4 @@
-import { ImageCardSkeleton } from "@/components/image-card-skeleton";
+import { ImageCardSkeleton } from "@/app/(home)/components/image-card-skeleton";
 
 const INITIAL_SKELETON_COUNT = 15;
 

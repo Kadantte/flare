@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { useState } from "react";
 
-import { ImageCardSkeleton } from "@/components/image-card-skeleton";
-import { ImageError } from "@/components/image-error";
+import { ImageCardSkeleton } from "@/app/(home)/components/image-card-skeleton";
+import { ImageError } from "@/app/(home)/components/image-error";
 import { Badge } from "@/components/ui/badge";
 
 import { NSFW_RATINGS, type NSFWRating } from "@/constants";

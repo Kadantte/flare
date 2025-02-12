@@ -2,10 +2,10 @@
 
 import { useInView } from "react-intersection-observer";
 
-import { ImageCard } from "@/components/image-card";
-import { ImageGallerySkeleton } from "@/components/image-gallery-skeleton";
-import { ImageLoadError } from "@/components/image-load-error";
-import { NoImagesFound } from "@/components/no-images-found";
+import { ImageCard } from "@/app/(home)/components/image-card";
+import { ImageGallerySkeleton } from "@/app/(home)/components/image-gallery-skeleton";
+import { ImageLoadError } from "@/app/(home)/components/image-load-error";
+import { NoImagesFound } from "@/app/(home)/components/no-images-found";
 
 import { useImages } from "@/hooks/use-images";
 
