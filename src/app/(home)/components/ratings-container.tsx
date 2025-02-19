@@ -1,9 +1,5 @@
-"use client";
-
-import { Settings } from "lucide-react";
-
 import { RatingsDropdown } from "@/app/(home)/components/ratings-dropdown";
-import { Button } from "@/components/ui/button";
+import { SettingsDialog } from "@/components/settings-dialog";
 
 export function RatingsContainer() {
   return (
@@ -13,16 +9,7 @@ export function RatingsContainer() {
           <RatingsDropdown />
         </div>
 
-        <Button
-          variant="outline"
-          size="icon"
-          aria-label="Settings (coming soon)"
-          disabled
-          className="shrink-0"
-          title="Settings coming soon"
-        >
-          <Settings className="h-4 w-4" />
-        </Button>
+        <SettingsDialog />
       </div>
     </div>
   );
