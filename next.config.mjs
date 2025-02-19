@@ -7,6 +7,7 @@ const nextConfig = {
   },
   images: {
     remotePatterns: [{ hostname: "s3.nyeki.dev" }],
+    unoptimized: true,
   },
 };
 
