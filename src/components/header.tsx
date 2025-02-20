@@ -7,10 +7,10 @@ export function Header() {
   return (
     <header className="bg-background/95 supports-backdrop-filter:bg-background/60 sticky top-0 z-50 flex items-center justify-between px-4 py-4 backdrop-blur-sm sm:px-6 lg:px-10">
       <Link
-        href="https://github.com/trecente"
+        href="https://github.com/trecente/flare"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="GitHub Profile"
+        aria-label="GitHub Repository"
         className="transition-opacity hover:opacity-80"
       >
         <GitHubLogoIcon className="h-5 w-5 sm:h-6 sm:w-6" />
