@@ -2,6 +2,7 @@
 
 import { Settings } from "lucide-react";
 
+import { SettingItem } from "@/components/setting-item";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,7 +11,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Switch } from "@/components/ui/switch";
 import { useImages } from "@/hooks/use-images";
 import { useSettings } from "@/hooks/use-settings";
 
@@ -39,26 +39,22 @@ export function SettingsDialog() {
         </DialogHeader>
 
         <div className="space-y-6 py-4">
-          <div className="flex items-center justify-between space-x-4">
-            <div className="flex-1 space-y-1">
-              <label
-                htmlFor="show-nsfw"
-                className="text-sm leading-none font-medium"
-              >
-                Show NSFW Content
-              </label>
-              <p className="text-muted-foreground text-[0.8rem]">
-                Toggle visibility of NSFW images
-              </p>
-            </div>
-            <Switch
-              id="show-nsfw"
-              checked={settings.showNSFW}
-              onCheckedChange={(checked) => {
-                updateSettings({ showNSFW: checked });
-              }}
-            />
-          </div>
+          <SettingItem
+            id="showNSFW"
+            label="Show NSFW Content"
+            description="Include NSFW images in the results"
+            checked={settings.showNSFW}
+            onCheckedChange={(checked) => updateSettings({ showNSFW: checked })}
+          />
+
+          <SettingItem
+            id="onlyNSFW"
+            label="Only NSFW Content"
+            description="Show only NSFW images (requires NSFW content to be enabled)"
+            checked={settings.onlyNSFW}
+            disabled={!settings.showNSFW}
+            onCheckedChange={(checked) => updateSettings({ onlyNSFW: checked })}
+          />
         </div>
       </DialogContent>
     </Dialog>
