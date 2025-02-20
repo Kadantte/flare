@@ -1,34 +1,39 @@
 "use client";
 
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { useAtomValue } from "jotai";
+import { useQuery } from "@tanstack/react-query";
 
+import { RATINGS_BY_MODE, type Mode } from "@/constants";
+import { useSettings } from "@/hooks/use-settings";
 import { getImages } from "@/services/image-service";
-import { ratingsAtom } from "@/store";
 
 const ITEMS_PER_PAGE = 30;
 
-export function useImages() {
-  const ratings = useAtomValue(ratingsAtom);
+function getModeFromSettings(showNSFW: boolean, onlyNSFW: boolean): Mode {
+  if (!showNSFW) return "sfw";
+  return onlyNSFW ? "nsfw" : "all";
+}
 
-  const query = useInfiniteQuery({
-    queryKey: ["images", ratings],
-    queryFn: ({ pageParam = 0 }) =>
+export function useImages() {
+  const { settings } = useSettings();
+  const mode = getModeFromSettings(settings.showNSFW, settings.onlyNSFW);
+
+  const { data, isError, isLoading, isFetching, error, refetch } = useQuery({
+    queryKey: ["images", mode],
+    queryFn: () =>
       getImages({
-        offset: pageParam as number,
+        offset: 0,
         limit: ITEMS_PER_PAGE,
-        ratings,
+        ratings: RATINGS_BY_MODE[mode],
       }),
-    initialPageParam: 0,
-    getNextPageParam: (lastPage, allPages) =>
-      lastPage.length === ITEMS_PER_PAGE
-        ? allPages.length * ITEMS_PER_PAGE
-        : undefined,
   });
 
   return {
-    ...query,
-    images: query.data?.pages.flatMap((page) => page) ?? [],
-    isUnavailable: query.isError || query.isLoading,
+    images: data ?? [],
+    isError,
+    isLoading,
+    isFetching,
+    error,
+    isUnavailable: isError || isLoading,
+    refetch,
   };
 }
