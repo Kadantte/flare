@@ -3,6 +3,8 @@
 import { Download, ExternalLink, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useTransition } from "react";
+import { toast } from "sonner";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -21,6 +23,38 @@ type ImageDialogProps = {
 };
 
 export function ImageDialog({ image, children }: ImageDialogProps) {
+  const [isPending, startTransition] = useTransition();
+
+  const handleDownload = () => {
+    startTransition(async () => {
+      try {
+        const filename = `image_${image.id}.jpg`;
+
+        const response = await fetch(image.url);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch image: ${response.statusText}`);
+        }
+
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(blobUrl);
+
+        toast.success("Image downloaded successfully");
+      } catch (error) {
+        console.error("Failed to download image:", error);
+        toast.error("Failed to download image");
+      }
+    });
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -72,11 +106,13 @@ export function ImageDialog({ image, children }: ImageDialogProps) {
                     )}
                     <Button
                       size="sm"
-                      variant="ghost"
-                      className="cursor-not-allowed gap-2 opacity-50"
-                      title="Download original image (coming soon)"
+                      variant="outline"
+                      className="cursor-pointer gap-2"
+                      title="Download original image"
+                      onClick={handleDownload}
+                      disabled={isPending}
                     >
-                      Download
+                      {isPending ? "Downloading..." : "Download"}
                       <Download className="h-4 w-4" />
                     </Button>
                   </div>
