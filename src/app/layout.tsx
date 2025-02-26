@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 
@@ -81,6 +82,7 @@ export default function RootLayout({
             <Header />
             <main className="flex-1">{children}</main>
             <BackToTop />
+            <Analytics />
             <Toaster />
           </div>
         </Providers>
