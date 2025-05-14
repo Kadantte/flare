@@ -28,9 +28,12 @@ export function ImageDialog({ image, children }: ImageDialogProps) {
   const handleDownload = () => {
     startTransition(async () => {
       try {
-        const filename = `image_${image.id}.jpg`;
+        const extension = image.url.split(".").pop() || "jpg";
+
+        const filename = `image_${image.id}.${extension}`;
 
         const response = await fetch(image.url);
+
         if (!response.ok) {
           throw new Error(`Failed to fetch image: ${response.statusText}`);
         }
