@@ -14,7 +14,3 @@ export interface ImageResponse {
   items: Image[];
   count: number;
 }
-
-export interface ImageError {
-  error: string;
-}

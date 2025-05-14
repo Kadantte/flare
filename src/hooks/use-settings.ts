@@ -6,7 +6,7 @@ export function useSettings() {
   const [settings, setSettings] = useAtom(settingsAtom);
 
   return {
-    settings,
+    ...settings,
     updateSettings: (newSettings: Partial<AppSettings>) =>
       setSettings((current) => ({
         ...current,

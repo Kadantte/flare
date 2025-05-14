@@ -16,7 +16,7 @@ import { useSettings } from "@/hooks/use-settings";
 
 export function SettingsDialog() {
   const { isUnavailable } = useImages();
-  const { settings, updateSettings } = useSettings();
+  const { showNSFW, onlyNSFW, updateSettings } = useSettings();
 
   return (
     <Dialog>
@@ -43,7 +43,7 @@ export function SettingsDialog() {
             id="showNSFW"
             label="Show NSFW Content"
             description="Include NSFW images in the results"
-            checked={settings.showNSFW}
+            checked={showNSFW}
             onCheckedChange={(checked) => updateSettings({ showNSFW: checked })}
           />
 
@@ -51,8 +51,8 @@ export function SettingsDialog() {
             id="onlyNSFW"
             label="Only NSFW Content"
             description="Show only NSFW images (requires NSFW content to be enabled)"
-            checked={settings.onlyNSFW}
-            disabled={!settings.showNSFW}
+            checked={onlyNSFW}
+            disabled={!showNSFW}
             onCheckedChange={(checked) => updateSettings({ onlyNSFW: checked })}
           />
         </div>

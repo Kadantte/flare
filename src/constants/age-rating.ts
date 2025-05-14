@@ -18,5 +18,3 @@ export const RATINGS_BY_MODE = {
   nsfw: NSFW_RATINGS,
   all: ageRatings,
 } as const;
-
-export type Mode = keyof typeof RATINGS_BY_MODE;
