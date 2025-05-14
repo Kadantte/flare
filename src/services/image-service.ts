@@ -1,4 +1,4 @@
-import type { AgeRating } from "@/constants";
+import { type AgeRating, ERROR_MESSAGES } from "@/constants";
 import type { Image } from "@/types";
 import { toast } from "sonner";
 
@@ -14,10 +14,22 @@ export async function getImages(
 
     const data = await response.json();
 
+    if (data && typeof data === "object" && "error" in data) {
+      throw new Error(data.error);
+    }
+
     return data as Image[];
   } catch (error) {
-    console.error("[Image Service] Error:", error);
-    toast.error("An unexpected error occurred");
+    console.error("[Image Service] Error fetching images:", error);
+
+    const message =
+      error instanceof Error &&
+      (Object.values(ERROR_MESSAGES) as string[]).includes(error.message)
+        ? error.message
+        : ERROR_MESSAGES.UNEXPECTED_ERROR;
+
+    toast.error(message);
+
     throw error;
   }
 }

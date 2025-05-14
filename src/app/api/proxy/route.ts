@@ -1,34 +1,31 @@
+import { ERROR_MESSAGES } from "@/constants";
 import { NextRequest, NextResponse } from "next/server";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-const ERROR_MESSAGES = {
-  SERVICE_UNAVAILABLE:
-    "Oops! We're having some issues. Please try again in a moment.",
-  BAD_REQUEST:
-    "Something went wrong with your request. Try refreshing the page.",
-  FAILED_TO_LOAD: "Unable to load images right now. Please try again.",
-} as const;
+const ERROR_MESSAGES_BY_STATUS: Record<number, string> = {
+  400: ERROR_MESSAGES.BAD_REQUEST,
+  500: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
+  503: ERROR_MESSAGES.SERVICE_UNAVAILABLE,
+};
 
-function createErrorResponse(message: string, status: number) {
-  return NextResponse.json({ error: message }, { status });
-}
+function createErrorResponse(status: number) {
+  const message = ERROR_MESSAGES_BY_STATUS[status];
 
-function getErrorMessageByStatus(status: number): string {
-  switch (status) {
-    case 400:
-      return ERROR_MESSAGES.BAD_REQUEST;
-    case 503:
-      return ERROR_MESSAGES.SERVICE_UNAVAILABLE;
-    default:
-      return ERROR_MESSAGES.FAILED_TO_LOAD;
+  if (!message) {
+    console.warn(`[Proxy] Unhandled status code: ${status}`);
   }
+
+  return NextResponse.json(
+    { error: message || ERROR_MESSAGES.UNEXPECTED_ERROR },
+    { status }
+  );
 }
 
 export async function GET(request: NextRequest) {
   if (!API_URL) {
     console.error("[Proxy] API_URL environment variable is not configured");
-    return createErrorResponse(ERROR_MESSAGES.SERVICE_UNAVAILABLE, 503);
+    return createErrorResponse(503);
   }
 
   try {
@@ -46,15 +43,12 @@ export async function GET(request: NextRequest) {
         `[Proxy] External API error: ${response.status} ${response.statusText}`
       );
 
-      return createErrorResponse(
-        getErrorMessageByStatus(response.status),
-        response.status
-      );
+      return createErrorResponse(response.status);
     }
 
     return NextResponse.json(await response.json());
   } catch (error) {
     console.error("[Proxy] Unexpected error:", error);
-    return createErrorResponse(ERROR_MESSAGES.SERVICE_UNAVAILABLE, 503);
+    return createErrorResponse(503);
   }
 }
