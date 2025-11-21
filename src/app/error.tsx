@@ -26,8 +26,13 @@ export default function Error({ error }: ErrorProps) {
           </p>
           <p className="mt-4 text-sm text-muted-foreground">
             If the issue persists, please{" "}
-            <Link href="/contact" className="text-primary hover:underline">
-              contact our support team
+            <Link
+              href="https://github.com/trecente/flare/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              report it on GitHub
             </Link>
             .
           </p>
