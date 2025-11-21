@@ -5,11 +5,12 @@ import { toast } from "sonner";
 const API_ENDPOINT = "/api/proxy";
 
 export async function getImages(
-  ratings: readonly AgeRating[]
+  ratings: readonly AgeRating[],
+  offset: number = 0
 ): Promise<Image[]> {
   try {
     const response = await fetch(
-      `${API_ENDPOINT}?offset=0&limit=30&rating=${ratings.join(",")}`
+      `${API_ENDPOINT}?offset=${offset}&limit=30&rating=${ratings.join(",")}`
     );
 
     const data = await response.json();
