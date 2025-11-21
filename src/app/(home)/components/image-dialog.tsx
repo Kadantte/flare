@@ -1,29 +1,69 @@
 "use client";
 
-import { Download, ExternalLink, User } from "lucide-react";
+import {
+    ChevronLeft,
+    ChevronRight,
+    Download,
+    ExternalLink,
+    User,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useTransition } from "react";
+import { useEffect, useRef, useTransition } from "react";
 import { toast } from "sonner";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
 } from "@/components/ui/dialog";
 
 import { Image as ImageType } from "@/types";
 
+
+
 type ImageDialogProps = {
-  image: ImageType;
-  children: React.ReactNode;
+  image: ImageType | null;
+  isOpen: boolean;
+  onClose: () => void;
+  onNext: () => void;
+  onPrev: () => void;
+  hasNext: boolean;
+  hasPrev: boolean;
 };
 
-export function ImageDialog({ image, children }: ImageDialogProps) {
+export function ImageDialog({
+  image,
+  isOpen,
+  onClose,
+  onNext,
+  onPrev,
+  hasNext,
+  hasPrev,
+}: ImageDialogProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isOpen) return;
+
+      if (e.key === "ArrowRight" && hasNext) {
+        e.preventDefault();
+        onNext();
+      } else if (e.key === "ArrowLeft" && hasPrev) {
+        e.preventDefault();
+        onPrev();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, hasNext, hasPrev, onNext, onPrev]);
+
+  if (!image) return null;
 
   const handleDownload = () => {
     startTransition(async () => {
@@ -59,11 +99,19 @@ export function ImageDialog({ image, children }: ImageDialogProps) {
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-
-      <DialogContent className="h-[90dvh] w-[95vw] max-w-[95vw] overflow-hidden rounded-lg border p-0 shadow-md transition-all duration-300 sm:h-[85vh] sm:max-h-[85vh] sm:w-[85vw] md:w-[80vw] lg:w-[70vw] xl:w-[60vw]">
-        <div className="bg-background flex h-full flex-col">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent
+        className="h-[90dvh] w-[95vw] max-w-[95vw] overflow-hidden rounded-lg border p-0 shadow-md transition-all duration-300 sm:h-[85vh] sm:max-h-[85vh] sm:w-[85vw] md:w-[80vw] lg:w-[70vw] xl:w-[60vw]"
+        onOpenAutoFocus={(e) => {
+          e.preventDefault();
+          containerRef.current?.focus();
+        }}
+      >
+        <div
+          className="bg-background flex h-full flex-col outline-none"
+          ref={containerRef}
+          tabIndex={-1}
+        >
           <DialogHeader className="flex flex-row items-center justify-between border-b px-3 py-2.5 sm:px-4 sm:py-3">
             <DialogTitle className="text-sm font-medium sm:text-base">
               Image Details
@@ -82,6 +130,26 @@ export function ImageDialog({ image, children }: ImageDialogProps) {
                   sizes="(max-width: 640px) 95vw, (max-width: 768px) 85vw, (max-width: 1024px) 80vw, (max-width: 1280px) 70vw, 60vw"
                 />
               </div>
+
+              {hasPrev && (
+                <button
+                  onClick={onPrev}
+                  className="absolute top-1/2 left-2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                  aria-label="Previous image"
+                >
+                  <ChevronLeft className="h-6 w-6" />
+                </button>
+              )}
+
+              {hasNext && (
+                <button
+                  onClick={onNext}
+                  className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                  aria-label="Next image"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+              )}
             </div>
 
             <div className="bg-background border-t px-3 py-3 sm:px-4 sm:py-4">
