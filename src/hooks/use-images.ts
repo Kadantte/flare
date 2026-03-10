@@ -5,6 +5,7 @@ import { RATINGS_BY_MODE } from "@/constants";
 import { useSettings } from "@/hooks/use-settings";
 import { getImages } from "@/services/image-service";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 
 export function useImages() {
   const { showNSFW, onlyNSFW } = useSettings();
@@ -31,10 +32,15 @@ export function useImages() {
     },
   });
 
-  const allImages = data?.pages.flat() ?? [];
-  const images = allImages.filter(
-    (image, index, self) => index === self.findIndex((t) => t.id === image.id)
-  );
+  const images = useMemo(() => {
+    const allImages = data?.pages.flat() ?? [];
+    const seen = new Set<number>();
+    return allImages.filter((image) => {
+      if (seen.has(image.id)) return false;
+      seen.add(image.id);
+      return true;
+    });
+  }, [data]);
 
   return {
     images,
