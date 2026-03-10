@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useTransition } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -44,7 +44,7 @@ export function ImageDialog({
   hasPrev,
 }: ImageDialogProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isPending, startTransition] = useTransition();
+  const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -65,37 +65,37 @@ export function ImageDialog({
 
   if (!image) return null;
 
-  const handleDownload = () => {
-    startTransition(async () => {
-      try {
-        const extension = image.url.split(".").pop() || "jpg";
+  const handleDownload = async () => {
+    setIsDownloading(true);
+    try {
+      const extension = image.url.split(".").pop() || "jpg";
+      const filename = `image_${image.id}.${extension}`;
 
-        const filename = `image_${image.id}.${extension}`;
+      const response = await fetch(image.url);
 
-        const response = await fetch(image.url);
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch image: ${response.statusText}`);
-        }
-
-        const blob = await response.blob();
-        const blobUrl = URL.createObjectURL(blob);
-
-        const link = document.createElement("a");
-        link.href = blobUrl;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-
-        document.body.removeChild(link);
-        URL.revokeObjectURL(blobUrl);
-
-        toast.success("Image downloaded successfully");
-      } catch (error) {
-        console.error("Failed to download image:", error);
-        toast.error("Failed to download image");
+      if (!response.ok) {
+        throw new Error(`Failed to fetch image: ${response.statusText}`);
       }
-    });
+
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl);
+
+      toast.success("Image downloaded successfully");
+    } catch (error) {
+      console.error("Failed to download image:", error);
+      toast.error("Failed to download image");
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   return (
@@ -193,9 +193,9 @@ export function ImageDialog({
                       className="h-7 cursor-pointer gap-1 px-2 text-xs sm:h-8 sm:gap-1.5 sm:px-3"
                       title="Download original image"
                       onClick={handleDownload}
-                      disabled={isPending}
+                      disabled={isDownloading}
                     >
-                      {isPending ? "Downloading..." : "Download"}
+                      {isDownloading ? "Downloading..." : "Download"}
                       <Download className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                     </Button>
                   </div>
