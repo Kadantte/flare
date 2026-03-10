@@ -6,9 +6,9 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 
 export function ToggleTheme() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
 
-  const handleToggle = () => setTheme(theme === "dark" ? "light" : "dark");
+  const handleToggle = () => setTheme(resolvedTheme === "dark" ? "light" : "dark");
 
   return (
     <Button onClick={handleToggle} variant="outline" size="icon">
