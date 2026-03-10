@@ -47,7 +47,6 @@ export function ImageCard({ image, priority, onClick }: ImageCardProps) {
             "object-cover transition-transform duration-700 group-hover:scale-105",
             isImageLoaded ? "blur-0" : "opacity-0 blur-2xl"
           )}
-          loading={priority ? "eager" : "lazy"}
           priority={priority}
           onLoad={() => setIsImageLoaded(true)}
           onError={() => setHasError(true)}
