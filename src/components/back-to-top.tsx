@@ -57,7 +57,7 @@ export function BackToTop() {
       aria-label="Scroll back to top"
       title="Scroll back to top"
     >
-      <ArrowUp className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
+      <ArrowUp className="h-4 w-4" />
     </Button>
   );
 }
